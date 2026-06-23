@@ -8,13 +8,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--gold:#FFD700;--dark:#08111f;--card:#111b2d;--green:#00ff88;--red:#ff5c5c;}
+:root{--gold:#FFD700;--dark:#08111f;--green:#00ff88;--red:#ff5c5c;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex;min-height:100vh;}
 .sidebar{position:fixed;left:0;top:0;width:260px;height:100%;background:#0c1424;border-right:1px solid rgba(255,215,0,.2);padding:16px;overflow-y:auto;z-index:100;}
 .logo-area{text-align:center;padding-bottom:14px;border-bottom:1px solid rgba(255,215,0,.15);}
-.logo-img{width:110px;height:110px;border-radius:50%;border:3px solid gold;object-fit:cover;display:block;margin:0 auto 10px;background:#0c2040;}
-.logo-area h2{color:gold;font-size:17px;font-weight:700;}
+.logo-area h2{color:gold;font-size:17px;font-weight:700;margin-top:10px;}
 .logo-area p{opacity:.6;font-size:11px;margin-top:3px;}
 .menu{margin-top:18px;}
 .menu a{display:flex;align-items:center;gap:10px;padding:11px 13px;margin-bottom:5px;text-decoration:none;color:rgba(255,255,255,.8);border-radius:12px;transition:.2s;font-size:13px;cursor:pointer;}
@@ -41,7 +40,7 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.5);}}
 .section-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
 .section-row.three{grid-template-columns:2fr 1fr 1fr;}
-#radar-map{height:460px;border-radius:18px;border:1px solid rgba(255,215,0,.12);overflow:hidden;margin-bottom:20px;}
+#radar-map{height:480px;border-radius:18px;border:1px solid rgba(255,215,0,.12);overflow:hidden;margin-bottom:20px;}
 .map-btn{padding:7px 12px;border:1px solid rgba(255,215,0,.3);background:transparent;color:white;border-radius:10px;cursor:pointer;font-size:12px;transition:.2s;margin-right:6px;margin-bottom:8px;}
 .map-btn:hover,.map-btn.active{background:rgba(255,215,0,.2);border-color:gold;color:gold;}
 .forecast-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;}
@@ -59,7 +58,7 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
 .setting input,.setting select{width:100%;padding:9px 11px;background:#08111f;color:white;border:1px solid #1e3050;border-radius:10px;font-size:13px;}
 .save-btn{margin-top:10px;background:gold;color:#08111f;font-weight:700;padding:10px;border:none;width:100%;border-radius:10px;cursor:pointer;font-size:14px;}
 .save-btn:hover{background:#ffe84d;}
-.save-btn.blue{background:#1a3a6b;color:gold;}
+.save-btn.blue{background:#1a3a6b;color:gold;margin-top:8px;}
 .spin{width:26px;height:26px;border:3px solid rgba(255,215,0,.2);border-top-color:gold;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .alert-box{background:rgba(0,100,50,.2);border:1px solid rgba(0,255,136,.25);border-radius:14px;padding:13px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
@@ -69,6 +68,16 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
 .footer{margin-top:28px;text-align:center;opacity:.5;font-size:11px;padding-bottom:18px;}
 #tg-log{font-size:12px;font-family:monospace;background:#05101e;border:1px solid rgba(255,215,0,.1);border-radius:10px;padding:12px;max-height:200px;overflow-y:auto;line-height:1.9;}
 .tg-ok{color:#00ff88;}.tg-err{color:#ff5c5c;}.tg-info{color:gold;}
+/* COMPASS */
+#compass-wrap{position:relative;width:100%;padding-top:10px;}
+#compass-canvas{display:block;margin:0 auto;width:100%;max-width:460px;}
+/* SYSTEM LIST */
+.sys-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:8px;border-radius:12px;font-size:13px;}
+.sys-item.heavy{background:rgba(255,80,30,.12);border:1px solid rgba(255,100,50,.3);}
+.sys-item.moderate{background:rgba(255,180,0,.1);border:1px solid rgba(255,200,0,.25);}
+.sys-item.light{background:rgba(79,195,247,.08);border:1px solid rgba(79,195,247,.2);}
+.sys-item.clear{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);}
+.sys-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 @media(max-width:900px){.sidebar{transform:translateX(-260px);}.sidebar.open{transform:translateX(0);}.main{margin-left:0;}.section-row,.section-row.three{grid-template-columns:1fr;}.hamburger{display:flex!important;}}
 .hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;background:rgba(255,215,0,.15);border:none;color:gold;font-size:20px;border-radius:10px;cursor:pointer;}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:3px;}
@@ -76,19 +85,11 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
   <div class="logo-area">
-    <!-- MR TP Logo embedded as SVG so it works on GitHub Pages without any file upload -->
-    <svg width="110" height="110" viewBox="0 0 110 110" style="border-radius:50%;border:3px solid gold;display:block;margin:0 auto 10px;" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#1a4a8a"/>
-          <stop offset="100%" stop-color="#08111f"/>
-        </radialGradient>
-      </defs>
+    <svg width="100" height="100" viewBox="0 0 110 110" style="border-radius:50%;border:3px solid gold;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="bg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1a4a8a"/><stop offset="100%" stop-color="#08111f"/></radialGradient></defs>
       <circle cx="55" cy="55" r="55" fill="url(#bg)"/>
-      <!-- Sun -->
       <circle cx="30" cy="30" r="12" fill="#FFD700" opacity="0.9"/>
       <line x1="30" y1="12" x2="30" y2="18" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
       <line x1="30" y1="42" x2="30" y2="48" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
@@ -98,32 +99,24 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
       <line x1="39" y1="39" x2="43" y2="43" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
       <line x1="43" y1="17" x2="39" y2="21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
       <line x1="17" y1="43" x2="21" y2="39" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
-      <!-- Dark cloud -->
-      <ellipse cx="78" cy="42" rx="14" ry="10" fill="#444" opacity="0.9"/>
-      <ellipse cx="88" cy="46" rx="10" ry="8" fill="#555" opacity="0.9"/>
-      <ellipse cx="70" cy="46" rx="8" ry="7" fill="#444" opacity="0.9"/>
-      <!-- Lightning -->
+      <ellipse cx="78" cy="42" rx="14" ry="10" fill="#333" opacity="0.9"/>
+      <ellipse cx="88" cy="46" rx="10" ry="8" fill="#444" opacity="0.9"/>
+      <ellipse cx="70" cy="46" rx="8" ry="7" fill="#333" opacity="0.9"/>
       <polyline points="80,54 77,62 82,62 78,72" stroke="#FFD700" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- Rain drops -->
       <circle cx="72" cy="68" r="2" fill="#4fc3f7" opacity="0.9"/>
       <circle cx="76" cy="74" r="2" fill="#4fc3f7" opacity="0.9"/>
       <circle cx="88" cy="66" r="2" fill="#4fc3f7" opacity="0.9"/>
-      <circle cx="92" cy="72" r="2" fill="#4fc3f7" opacity="0.9"/>
-      <!-- Main white cloud -->
       <ellipse cx="52" cy="62" rx="22" ry="13" fill="white" opacity="0.95"/>
       <ellipse cx="40" cy="64" rx="14" ry="11" fill="white" opacity="0.95"/>
       <ellipse cx="64" cy="66" rx="12" ry="9" fill="white" opacity="0.95"/>
-      <!-- Sunglasses on cloud -->
       <rect x="38" y="58" width="10" height="7" rx="3" fill="#111" opacity="0.85"/>
       <rect x="51" y="58" width="10" height="7" rx="3" fill="#111" opacity="0.85"/>
       <line x1="48" y1="61" x2="51" y2="61" stroke="#555" stroke-width="1.5"/>
-      <!-- Hat -->
       <rect x="36" y="50" width="28" height="5" rx="2" fill="#2d6e2d"/>
       <rect x="40" y="42" width="20" height="10" rx="3" fill="#2d6e2d"/>
       <rect x="34" y="49" width="32" height="3" rx="1" fill="#1a5c1a"/>
-      <!-- MR TP text -->
-      <text x="55" y="90" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="13" font-weight="700" fill="white" letter-spacing="1">MR TP</text>
-      <text x="55" y="103" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="7" fill="rgba(255,215,0,0.8)">CAMBODIA RAIN</text>
+      <text x="55" y="90" text-anchor="middle" font-family="Poppins,Arial" font-size="13" font-weight="700" fill="white" letter-spacing="1">MR TP</text>
+      <text x="55" y="103" text-anchor="middle" font-family="Poppins,Arial" font-size="7" fill="rgba(255,215,0,0.8)">CAMBODIA RAIN</text>
     </svg>
     <h2>MR TP</h2>
     <p>Cambodia Rain 8888 AI Center</p>
@@ -140,7 +133,6 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:10px;">
@@ -152,7 +144,7 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
     </div>
     <div class="top-right">
       <select class="province-select" id="province-select" onchange="changeProvince()">
-        <option value="11.5564,104.9282,Phnom Penh">Phnom Penh</option>
+        <option value="11.5641,104.9161,Phnom Penh">Phnom Penh (My Location)</option>
         <option value="13.0957,103.2022,Siem Reap">Siem Reap</option>
         <option value="13.1035,103.1980,Battambang">Battambang</option>
         <option value="10.6232,103.5221,Sihanoukville">Sihanoukville</option>
@@ -165,8 +157,6 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
         <option value="11.7008,104.4643,Kandal">Kandal</option>
         <option value="13.7339,107.0092,Ratanakiri">Ratanakiri</option>
         <option value="12.5657,107.9993,Mondulkiri">Mondulkiri</option>
-        <option value="13.8960,102.5610,Banteay Meanchey">Banteay Meanchey</option>
-        <option value="14.1732,103.1860,Oddar Meanchey">Oddar Meanchey</option>
       </select>
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
       <button class="lang-btn" id="btn-kh" onclick="setLang('kh')">🇰🇭 ខ្មែរ</button>
@@ -179,64 +169,30 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
     <div class="alert-text" id="alert-text"></div>
   </div>
 
-  <!-- ═══ DASHBOARD ═══ -->
+  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="grid">
-      <div class="card">
-        <h3>Rain Probability</h3>
-        <div class="big green" id="rain-prob">--</div>
-        <div id="rain-badge" class="badge">--</div>
-        <div class="sub" id="rain-sub"></div>
-      </div>
-      <div class="card">
-        <h3>Temperature</h3>
-        <div class="big gold" id="temp">--</div>
-        <div class="sub" id="feels-like"></div>
-      </div>
-      <div class="card">
-        <h3>Humidity</h3>
-        <div class="big blue" id="humidity">--</div>
-        <div class="sub">Relative Humidity</div>
-      </div>
-      <div class="card">
-        <h3>Wind</h3>
-        <div class="big" style="color:#c084fc;" id="wind">--</div>
-        <div class="sub" id="wind-dir"></div>
-      </div>
-      <div class="card">
-        <h3>Cloud Cover</h3>
-        <div class="big" style="color:#90caf9;" id="cloud-cover">--</div>
-        <div class="sub">% sky</div>
-      </div>
-      <div class="card">
-        <h3>Pressure</h3>
-        <div class="big" style="color:#fbbf24;" id="pressure">--</div>
-        <div class="sub">hPa</div>
-      </div>
+      <div class="card"><h3>Rain Probability</h3><div class="big green" id="rain-prob">--</div><div id="rain-badge" class="badge">--</div><div class="sub" id="rain-sub"></div></div>
+      <div class="card"><h3>Temperature</h3><div class="big gold" id="temp">--</div><div class="sub" id="feels-like"></div></div>
+      <div class="card"><h3>Humidity</h3><div class="big blue" id="humidity">--</div><div class="sub">Relative Humidity</div></div>
+      <div class="card"><h3>Wind</h3><div class="big" style="color:#c084fc;" id="wind">--</div><div class="sub" id="wind-dir"></div></div>
+      <div class="card"><h3>Cloud Cover</h3><div class="big" style="color:#90caf9;" id="cloud-cover">--</div><div class="sub">% sky</div></div>
+      <div class="card"><h3>Pressure</h3><div class="big" style="color:#fbbf24;" id="pressure">--</div><div class="sub">hPa</div></div>
     </div>
     <div class="section-row three">
-      <div class="card">
-        <h3>7-Hour Forecast</h3>
-        <div id="forecast-list"><div style="text-align:center;padding:20px;"><div class="spin"></div></div></div>
-      </div>
-      <div class="card">
-        <h3>Condition</h3>
-        <div style="font-size:52px;text-align:center;margin:10px 0;" id="weather-icon">⏳</div>
-        <div style="text-align:center;font-size:13px;opacity:.7;" id="weather-desc">Loading…</div>
-        <div style="text-align:center;margin-top:8px;font-size:11px;opacity:.5;" id="uv-info"></div>
-      </div>
-      <div class="card">
-        <h3>Today</h3>
+      <div class="card"><h3>7-Hour Forecast</h3><div id="forecast-list"><div style="text-align:center;padding:20px;"><div class="spin"></div></div></div></div>
+      <div class="card"><h3>Condition</h3><div style="font-size:52px;text-align:center;margin:10px 0;" id="weather-icon">⏳</div><div style="text-align:center;font-size:13px;opacity:.7;" id="weather-desc">Loading…</div><div style="text-align:center;margin-top:8px;font-size:11px;opacity:.5;" id="uv-info"></div></div>
+      <div class="card"><h3>Today</h3>
         <div class="cloud-item"><span class="cloud-label">Max Temp</span><span class="cloud-val" id="temp-max">--</span></div>
         <div class="cloud-item"><span class="cloud-label">Min Temp</span><span class="cloud-val" id="temp-min">--</span></div>
         <div class="cloud-item"><span class="cloud-label">Sunrise</span><span class="cloud-val" id="sunrise">--</span></div>
         <div class="cloud-item"><span class="cloud-label">Sunset</span><span class="cloud-val" id="sunset">--</span></div>
-        <div class="cloud-item"><span class="cloud-label">Rain Today</span><span class="cloud-val" id="rain-today">--</span></div>
+        <div class="cloud-item"><span class="cloud-label">Rain Total</span><span class="cloud-val" id="rain-today">--</span></div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ RAIN ═══ -->
+  <!-- RAIN -->
   <div class="page" id="page-rain">
     <div class="grid">
       <div class="card"><h3>Rain Now</h3><div class="big green" id="rain-rate">--</div><div class="sub">mm/h</div></div>
@@ -249,7 +205,7 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
     </div>
   </div>
 
-  <!-- ═══ CLOUDS ═══ -->
+  <!-- CLOUDS -->
   <div class="page" id="page-clouds">
     <div class="grid">
       <div class="card"><h3>Low Clouds 0-2km</h3><div class="big blue" id="cloud-low">--</div><div class="sub">%</div></div>
@@ -260,54 +216,56 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
     <div class="card"><h3>24h Cloud Forecast</h3><div id="cloud-24h-list"><div style="text-align:center;padding:20px;"><div class="spin"></div></div></div></div>
   </div>
 
-  <!-- ═══ LIVE RADAR ═══ -->
+  <!-- LIVE RADAR -->
   <div class="page" id="page-radar">
     <div style="margin-bottom:12px;">
       <button class="map-btn active" id="map-rain-btn" onclick="setMapLayer('rain')">🌧 Rain Radar</button>
       <button class="map-btn" id="map-sat-btn" onclick="setMapLayer('satellite')">🛰 Satellite</button>
-      <button class="map-btn" id="map-wind-btn" onclick="setMapLayer('wind')">💨 Wind</button>
-      <button class="map-btn" onclick="if(map)map.setView([currentLat,currentLon],8)">📍 Reset View</button>
+      <button class="map-btn" onclick="if(map){map.setView([currentLat,currentLon],9);}">📍 My Location</button>
+      <button class="map-btn" onclick="if(map){map.setView([currentLat,currentLon],7);}">🌏 100km View</button>
     </div>
     <div id="radar-map"></div>
     <div class="card" style="margin-top:14px;">
-      <p style="font-size:12px;opacity:.6;">🛰 Rain radar: RainViewer live data &bull; Scroll wheel or +/- to zoom &bull; 100km circle shows monitoring radius around selected city &bull; Drag to pan</p>
+      <p style="font-size:12px;opacity:.6;">📍 Center: Phnom Penh 11.5641°N 104.9161°E &bull; Gold circle = 100km radius &bull; Scroll to zoom &bull; Drag to pan &bull; Rain radar updates every 10 min</p>
     </div>
   </div>
 
-  <!-- ═══ STORM COMPASS ═══ -->
+  <!-- STORM COMPASS -->
   <div class="page" id="page-compass">
     <div class="section-row">
-      <div class="card" style="padding:20px;">
-        <h3>🧭 Storm Compass — 100 km Around <span id="compass-city">Phnom Penh</span></h3>
-        <canvas id="compass-canvas" width="440" height="400" style="width:100%;max-width:440px;display:block;margin:16px auto 0;"></canvas>
+      <div class="card">
+        <h3>🧭 Storm Compass — 100km Scan Around <span id="compass-city">Phnom Penh</span></h3>
+        <div style="font-size:11px;opacity:.5;margin-bottom:8px;">Fetching real weather from 8 directions every refresh</div>
+        <div id="compass-wrap">
+          <canvas id="compass-canvas" width="460" height="420"></canvas>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;flex-wrap:wrap;">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff4020;margin-right:4px;"></span>Heavy Rain (≥60%)</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#FFD700;margin-right:4px;"></span>Moderate (30-60%)</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4fc3f7;margin-right:4px;"></span>Light (&lt;30%)</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00ff88;margin-right:4px;"></span>Clear Sky</span>
+        </div>
       </div>
       <div class="card">
-        <h3>Cloud Systems Detected</h3>
-        <div id="compass-systems" style="font-size:13px;line-height:2.1;opacity:.85;padding-top:8px;">Scanning sky…</div>
-        <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px;">
-          <div class="cloud-item"><span class="cloud-label">Center City</span><span class="cloud-val" id="cs-city">--</span></div>
-          <div class="cloud-item"><span class="cloud-label">Wind Direction</span><span class="cloud-val" id="cs-wind">--</span></div>
-          <div class="cloud-item"><span class="cloud-label">Cloud Cover</span><span class="cloud-val" id="cs-cloud">--</span></div>
-          <div class="cloud-item"><span class="cloud-label">Rain Probability</span><span class="cloud-val" id="cs-rain">--</span></div>
-          <div class="cloud-item"><span class="cloud-label">Nearest System</span><span class="cloud-val" id="cs-nearest">--</span></div>
+        <h3>☁ Cloud Systems Detected (100km)</h3>
+        <div style="font-size:11px;color:gold;margin-bottom:10px;opacity:.7;" id="compass-scan-time">Scanning 8 directions…</div>
+        <div id="compass-systems"><div style="text-align:center;padding:20px;"><div class="spin"></div></div></div>
+        <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;">
+          <div class="cloud-item"><span class="cloud-label">Center City</span><span class="cloud-val" id="cs-city">Phnom Penh</span></div>
+          <div class="cloud-item"><span class="cloud-label">Nearest Rain System</span><span class="cloud-val" id="cs-nearest">--</span></div>
+          <div class="cloud-item"><span class="cloud-label">Most Dangerous</span><span class="cloud-val" id="cs-danger">--</span></div>
+          <div class="cloud-item"><span class="cloud-label">ETA to Center</span><span class="cloud-val" id="cs-eta">--</span></div>
+          <div class="cloud-item"><span class="cloud-label">Overall Risk</span><span class="cloud-val" id="cs-risk">--</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ AI FORECAST ═══ -->
+  <!-- AI FORECAST -->
   <div class="page" id="page-forecast">
     <div class="grid">
-      <div class="card">
-        <h3>AI Rain Signal</h3>
-        <div class="big green" id="ai-signal">--</div>
-        <div id="ai-badge" class="badge">Loading…</div>
-      </div>
-      <div class="card">
-        <h3>Confidence</h3>
-        <div class="big blue" id="ai-confidence">--</div>
-        <div class="sub">AI score from 5 factors</div>
-      </div>
+      <div class="card"><h3>AI Rain Signal</h3><div class="big green" id="ai-signal">--</div><div id="ai-badge" class="badge">Loading…</div></div>
+      <div class="card"><h3>Confidence</h3><div class="big blue" id="ai-confidence">--</div><div class="sub">AI score from 5 factors</div></div>
     </div>
     <div class="section-row">
       <div class="card"><h3>7-Day Forecast</h3><div id="daily-forecast"><div style="text-align:center;padding:20px;"><div class="spin"></div></div></div></div>
@@ -315,27 +273,22 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
     </div>
   </div>
 
-  <!-- ═══ TELEGRAM ═══ -->
+  <!-- TELEGRAM -->
   <div class="page" id="page-telegram">
     <div class="section-row">
       <div class="card">
-        <h3>📨 Auto Telegram Alerts</h3>
+        <h3>📨 Telegram Auto-Alerts</h3>
         <div style="font-size:13px;opacity:.7;line-height:2.2;margin-bottom:14px;">
           Channel: <strong style="color:gold;">@cambodiarain8888</strong><br>
           Bot: <strong style="color:gold;">@cambodiarain8888_bot</strong><br>
           Status: <span id="tg-status" class="badge rain">Active ✅</span>
         </div>
-        <div class="setting">
-          <label>Send Alert When Rain Probability &ge;</label>
-          <input type="number" id="tg-threshold" value="60" min="10" max="100">
-        </div>
-        <div class="setting">
-          <label>Auto Send Interval</label>
+        <div class="setting"><label>Send Alert When Rain % ≥</label><input type="number" id="tg-threshold" value="60" min="10" max="100"></div>
+        <div class="setting"><label>Auto Interval</label>
           <select id="tg-interval">
-            <option value="30">Every 30 minutes</option>
+            <option value="30">Every 30 min</option>
             <option value="60" selected>Every 1 hour</option>
             <option value="180">Every 3 hours</option>
-            <option value="360">Every 6 hours</option>
           </select>
         </div>
         <button class="save-btn" onclick="sendTelegramNow()">📤 Send Alert Now</button>
@@ -343,60 +296,72 @@ body{background:linear-gradient(135deg,#08111f,#0d1b2f);color:white;display:flex
       </div>
       <div class="card">
         <h3>📋 Message Log</h3>
-        <div id="tg-log"><span class="tg-info">Waiting for first message…</span></div>
-        <div style="margin-top:10px;font-size:12px;opacity:.5;">Messages auto-send based on interval and threshold settings above</div>
+        <div id="tg-log"><span class="tg-info">Ready to send…</span></div>
+        <div style="margin-top:10px;padding:10px;background:#05101e;border-radius:10px;font-size:11px;opacity:.6;">
+          💡 <strong>24/7 Auto-send:</strong> Uses GitHub Actions (runs on GitHub server every hour even when browser is closed)
+        </div>
       </div>
     </div>
     <div class="card">
       <h3>📝 Message Preview</h3>
-      <div id="tg-preview" style="font-size:12px;line-height:1.8;background:#05101e;border-radius:10px;padding:14px;margin-top:8px;font-family:monospace;white-space:pre-line;color:#cde;">Loading preview…</div>
+      <div id="tg-preview" style="font-size:12px;line-height:1.8;background:#05101e;border-radius:10px;padding:14px;margin-top:8px;font-family:monospace;white-space:pre-line;color:#cde;">Loading…</div>
     </div>
   </div>
 
-  <!-- ═══ SETTINGS ═══ -->
+  <!-- SETTINGS -->
   <div class="page" id="page-settings">
     <div class="section-row">
       <div class="card">
         <h3>General Settings</h3>
-        <div class="setting">
-          <label>Refresh Interval (minutes)</label>
-          <input type="number" id="s-refresh" value="5" min="1" max="60">
-        </div>
-        <div class="setting">
-          <label>Language</label>
-          <select id="s-lang" onchange="setLang(this.value)">
-            <option value="en">English</option>
-            <option value="kh">ខ្មែរ</option>
-          </select>
-        </div>
+        <div class="setting"><label>Refresh Interval (minutes)</label><input type="number" id="s-refresh" value="5" min="1" max="60"></div>
+        <div class="setting"><label>Language</label><select id="s-lang" onchange="setLang(this.value)"><option value="en">English</option><option value="kh">ខ្មែរ</option></select></div>
         <button class="save-btn" onclick="saveSettings()">Save Settings</button>
       </div>
       <div class="card">
         <h3>About</h3>
         <div style="font-size:13px;opacity:.7;line-height:2.1;">
           <strong style="color:gold;">Cambodia Rain 8888</strong> by MR TP<br>
-          🌧 Live data: Open-Meteo (free, no API key)<br>
+          📍 Center: 11.5641°N, 104.9161°E<br>
+          🌧 Data: Open-Meteo (8 direction scan)<br>
           🛰 Radar: RainViewer live tiles<br>
-          🧭 Storm Compass: 100km radius scan<br>
-          📨 Telegram auto-alerts built-in<br>
-          🤖 AI signal engine (5 factors)<br>
-          🌏 15 Cambodia provinces<br><br>
-          <span style="color:gold;">Version 3.0 LIVE ✅</span>
+          🧭 Compass: Real cloud detection 100km<br>
+          📨 Telegram: Browser + GitHub Actions bot<br>
+          🤖 AI signal engine (5 factors)<br><br>
+          <span style="color:gold;">Version 4.0 LIVE ✅</span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="footer">MR TP &bull; Cambodia Rain 8888 AI Weather Intelligence Center &bull; Open-Meteo + RainViewer</div>
+  <div class="footer">MR TP &bull; Cambodia Rain 8888 AI Weather &bull; Open-Meteo + RainViewer &bull; 11.5641°N 104.9161°E</div>
 </div>
 
 <script>
-// ─── STATE ───
-let currentLat=11.5564, currentLon=104.9282, currentCity='Phnom Penh';
-let currentLang='en', weatherData=null;
-let map=null, radarLayer=null, baseLayer=null, refreshTimer=null, tgTimer=null;
-const TG_TOKEN='8611542903:AAGtPB9oNeCUYMpy3SS5aXr0fuZiHjGJumQ';
-const TG_CHAT_ID='-1003908019472';
+// ─── CONFIG ───
+// Your exact GPS location from Google Maps
+const HOME_LAT = 11.564137;
+const HOME_LON = 104.916075;
+const HOME_CITY = 'Phnom Penh';
+
+let currentLat = HOME_LAT, currentLon = HOME_LON, currentCity = HOME_CITY;
+let currentLang = 'en', weatherData = null, compassData = [];
+let map = null, radarLayer = null, circleLayer = null;
+let refreshTimer = null, tgTimer = null;
+
+const TG_TOKEN = '8611542903:AAGtPB9oNeCUYMpy3SS5aXr0fuZiHjGJumQ';
+
+// 8 compass points — offsets ~50km and ~100km from center
+// Each point is a real GPS coordinate around Phnom Penh
+const SCAN_POINTS = [
+  {dir:'N',   deg:0,   lat50: HOME_LAT+0.45, lon50: HOME_LON,      lat100: HOME_LAT+0.90, lon100: HOME_LON},
+  {dir:'NE',  deg:45,  lat50: HOME_LAT+0.32, lon50: HOME_LON+0.45, lat100: HOME_LAT+0.63, lon100: HOME_LON+0.90},
+  {dir:'E',   deg:90,  lat50: HOME_LAT,       lon50: HOME_LON+0.55, lat100: HOME_LAT,       lon100: HOME_LON+1.10},
+  {dir:'SE',  deg:135, lat50: HOME_LAT-0.32, lon50: HOME_LON+0.45, lat100: HOME_LAT-0.63, lon100: HOME_LON+0.90},
+  {dir:'S',   deg:180, lat50: HOME_LAT-0.45, lon50: HOME_LON,      lat100: HOME_LAT-0.90, lon100: HOME_LON},
+  {dir:'SW',  deg:225, lat50: HOME_LAT-0.32, lon50: HOME_LON-0.45, lat100: HOME_LAT-0.63, lon100: HOME_LON-0.90},
+  {dir:'W',   deg:270, lat50: HOME_LAT,       lon50: HOME_LON-0.55, lat100: HOME_LAT,       lon100: HOME_LON-1.10},
+  {dir:'NW',  deg:315, lat50: HOME_LAT+0.32, lon50: HOME_LON-0.45, lat100: HOME_LAT+0.63, lon100: HOME_LON-0.90},
+];
 
 // ─── CLOCK ───
 setInterval(()=>{document.getElementById('time-display').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Phnom_Penh'});},1000);
@@ -408,26 +373,24 @@ function showPage(name){
   const pages=['dashboard','rain','clouds','radar','compass','forecast','telegram','settings'];
   document.querySelectorAll('.menu a').forEach((a,i)=>a.classList.toggle('active',pages[i]===name));
   if(name==='radar')setTimeout(initMap,100);
-  if(name==='compass'&&weatherData)drawCompass();
+  if(name==='compass')fetchCompassData();
   if(name==='telegram'&&weatherData)updateTgPreview();
   document.getElementById('sidebar').classList.remove('open');
 }
 
-// ─── LANGUAGE ───
 function setLang(lang){
   currentLang=lang;
   document.getElementById('btn-en').classList.toggle('active',lang==='en');
   document.getElementById('btn-kh').classList.toggle('active',lang==='kh');
 }
 
-// ─── PROVINCE ───
 function changeProvince(){
   const v=document.getElementById('province-select').value.split(',');
   currentLat=parseFloat(v[0]);currentLon=parseFloat(v[1]);currentCity=v[2]||'Cambodia';
   document.getElementById('location-label').textContent=currentCity+', Cambodia';
   document.getElementById('compass-city').textContent=currentCity;
   fetchWeather();
-  if(map){map.setView([currentLat,currentLon],8);if(circleLayer){map.removeLayer(circleLayer);}circleLayer=L.circle([currentLat,currentLon],{color:'rgba(255,215,0,0.4)',fillColor:'rgba(255,215,0,0.03)',fillOpacity:0.3,radius:100000,weight:1.5,dashArray:'8,8'}).addTo(map);}
+  if(map){map.setView([currentLat,currentLon],8);if(circleLayer){map.removeLayer(circleLayer);}circleLayer=L.circle([currentLat,currentLon],{color:'rgba(255,215,0,0.5)',fillColor:'rgba(255,215,0,0.03)',fillOpacity:0.2,radius:100000,weight:1.5,dashArray:'8,8'}).addTo(map);}
 }
 
 // ─── WMO ───
@@ -441,13 +404,13 @@ function wmoIcon(c){
 function windDir(d){return['N','NE','E','SE','S','SW','W','NW'][Math.round(d/45)%8];}
 function fmtTime(iso){if(!iso)return'--';return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Phnom_Penh'});}
 
-// ─── FETCH WEATHER ───
+// ─── FETCH CENTER WEATHER ───
 async function fetchWeather(){
   try{
     const params=new URLSearchParams({
       latitude:currentLat,longitude:currentLon,
-      current:['temperature_2m','relative_humidity_2m','apparent_temperature','precipitation','rain','weather_code','cloud_cover','wind_speed_10m','wind_direction_10m','pressure_msl','dew_point_2m','visibility','uv_index'].join(','),
-      hourly:['temperature_2m','precipitation_probability','precipitation','cloud_cover','cloud_cover_low','cloud_cover_mid','cloud_cover_high','wind_speed_10m','wind_direction_10m','rain','weather_code'].join(','),
+      current:['temperature_2m','relative_humidity_2m','apparent_temperature','precipitation','rain','weather_code','cloud_cover','wind_speed_10m','wind_direction_10m','pressure_msl','dew_point_2m','uv_index'].join(','),
+      hourly:['precipitation_probability','precipitation','cloud_cover','cloud_cover_low','cloud_cover_mid','cloud_cover_high','weather_code'].join(','),
       daily:['weather_code','temperature_2m_max','temperature_2m_min','precipitation_sum','precipitation_probability_max','sunrise','sunset'].join(','),
       timezone:'Asia/Bangkok',forecast_days:7
     });
@@ -455,7 +418,231 @@ async function fetchWeather(){
     weatherData=await res.json();
     updateUI(weatherData);
     document.getElementById('last-update').textContent='Updated: '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Phnom_Penh'});
-  }catch(e){document.getElementById('last-update').textContent='Error loading data';}
+  }catch(e){document.getElementById('last-update').textContent='⚠ Error loading data';}
+}
+
+// ─── FETCH 8-DIRECTION COMPASS DATA ───
+async function fetchCompassData(){
+  document.getElementById('compass-scan-time').textContent='Scanning 8 directions around '+currentCity+'…';
+  document.getElementById('compass-systems').innerHTML='<div style="text-align:center;padding:20px;"><div class="spin"></div></div>';
+  compassData=[];
+  // Fetch center first
+  const centerData = await fetchPoint(currentLat, currentLon);
+  // Fetch all 8 directions at 50km and 100km using SCAN_POINTS
+  const promises = SCAN_POINTS.map(async (pt)=>{
+    const [d50, d100] = await Promise.all([
+      fetchPoint(pt.lat50, pt.lon50),
+      fetchPoint(pt.lat100, pt.lon100)
+    ]);
+    return {dir:pt.dir, deg:pt.deg, km50:d50, km100:d100};
+  });
+  const results = await Promise.allSettled(promises);
+  compassData = results.filter(r=>r.status==='fulfilled').map(r=>r.value);
+  document.getElementById('compass-scan-time').textContent='Last scan: '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Phnom_Penh'})+' (8 directions × 2 ranges)';
+  drawCompass(centerData);
+  renderSystemsList();
+}
+
+async function fetchPoint(lat, lon){
+  const nowISO = new Date().toISOString().slice(0,13);
+  try{
+    const params=new URLSearchParams({
+      latitude:lat,longitude:lon,
+      current:['weather_code','cloud_cover','precipitation','rain','wind_speed_10m','wind_direction_10m','relative_humidity_2m'].join(','),
+      hourly:'precipitation_probability,weather_code,cloud_cover',
+      timezone:'Asia/Bangkok',forecast_days:1
+    });
+    const res=await fetch('https://api.open-meteo.com/v1/forecast?'+params);
+    const d=await res.json();
+    const c=d.current;
+    const h=d.hourly;
+    let hi=h.time.findIndex(t=>t.startsWith(nowISO));if(hi<0)hi=0;
+    const rainProb=h.precipitation_probability[hi]||0;
+    const wcode=c.weather_code||0;
+    const cloud=c.cloud_cover||0;
+    const isRainCloud = rainProb>=30 || (wcode>=51&&wcode<=99) || cloud>=70;
+    return {rainProb, wcode, cloud, rain:c.rain||0, humidity:c.relative_humidity_2m||0, isRainCloud, lat, lon};
+  }catch(e){
+    return {rainProb:0,wcode:0,cloud:0,rain:0,humidity:0,isRainCloud:false,lat,lon};
+  }
+}
+
+// ─── CLOUD TYPE CLASSIFICATION ───
+function classifyCloud(data){
+  const {rainProb, wcode, cloud, rain} = data;
+  if(wcode>=80&&wcode<=99) return {type:'⛈ Cumulonimbus (Storm)', color:'#ff2200', risk:'EXTREME', dot:'#ff2200'};
+  if(wcode>=61&&wcode<=67||rainProb>=60) return {type:'🌧 Nimbostratus (Heavy Rain)', color:'#ff6020', risk:'HIGH', dot:'#ff4020'};
+  if(wcode>=51&&wcode<=57||rainProb>=40) return {type:'🌦 Altostratus (Rain Cloud)', color:'#FFD700', risk:'MODERATE', dot:'#FFD700'};
+  if(cloud>=70||rainProb>=25) return {type:'☁ Stratocumulus (Dark Cloud)', color:'#90caf9', risk:'LOW', dot:'#4fc3f7'};
+  if(cloud>=40) return {type:'⛅ Cumulus (White Cloud)', color:'rgba(200,220,255,0.7)', risk:'WATCH', dot:'#aac8ff'};
+  return {type:'☀ Clear Sky', color:'#00ff88', risk:'NONE', dot:'#00ff88'};
+}
+
+// ─── DRAW COMPASS ───
+function drawCompass(centerData){
+  const canvas=document.getElementById('compass-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const cx=W/2,cy=H/2+10;
+  const maxR=Math.min(W,H)/2-38;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#06101e';ctx.fillRect(0,0,W,H);
+
+  // Glow bg
+  const grd=ctx.createRadialGradient(cx,cy,20,cx,cy,maxR*1.1);
+  grd.addColorStop(0,'rgba(20,60,140,0.15)');grd.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+
+  // Rings 40, 70, 100 km
+  [{r:0.4,km:'40 km'},{r:0.7,km:'70 km'},{r:1.0,km:'100 km'}].forEach((ring,i)=>{
+    const r=ring.r*maxR;
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(80,140,255,${0.3-i*0.07})`;ctx.setLineDash([5,6]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(100,160,255,0.45)';ctx.font='10px Poppins';ctx.textAlign='left';
+    ctx.fillText(ring.km,cx+r+5,cy+4);
+  });
+
+  // Axis lines
+  ctx.strokeStyle='rgba(80,140,255,0.18)';ctx.lineWidth=1;ctx.setLineDash([3,5]);
+  [[cx,cy-maxR-8,cx,cy+maxR+8],[cx-maxR-8,cy,cx+maxR+8,cy],
+   [cx-(maxR+8)*0.707,cy-(maxR+8)*0.707,cx+(maxR+8)*0.707,cy+(maxR+8)*0.707],
+   [cx+(maxR+8)*0.707,cy-(maxR+8)*0.707,cx-(maxR+8)*0.707,cy+(maxR+8)*0.707]
+  ].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();});
+  ctx.setLineDash([]);
+
+  // Cardinal labels
+  [{lbl:'N',x:cx,y:cy-maxR-20},{lbl:'S',x:cx,y:cy+maxR+24},{lbl:'E',x:cx+maxR+24,y:cy+5},{lbl:'W',x:cx-maxR-22,y:cy+5},
+   {lbl:'NE',x:cx+(maxR+18)*0.707,y:cy-(maxR+18)*0.707},{lbl:'NW',x:cx-(maxR+18)*0.707,y:cy-(maxR+18)*0.707},
+   {lbl:'SE',x:cx+(maxR+18)*0.707,y:cy+(maxR+18)*0.707},{lbl:'SW',x:cx-(maxR+18)*0.707,y:cy+(maxR+18)*0.707}
+  ].forEach(d=>{
+    const isMain=['N','S','E','W'].includes(d.lbl);
+    ctx.font=(isMain?'bold 13px':'10px')+' Poppins';
+    ctx.fillStyle=isMain?'rgba(180,210,255,0.9)':'rgba(120,160,210,0.6)';
+    ctx.textAlign='center';ctx.fillText(d.lbl,d.x,d.y);
+  });
+
+  // Draw 8-direction cloud blobs
+  compassData.forEach(pt=>{
+    // Draw at 50km
+    drawCloudBlob(ctx,pt.deg,0.50,pt.km50,cx,cy,maxR,16);
+    // Draw at 100km
+    drawCloudBlob(ctx,pt.deg,1.00,pt.km100,cx,cy,maxR,13);
+    // Arrow from center to nearest rain system
+    if(pt.km50.rainProb>=40||pt.km100.rainProb>=40){
+      const data=pt.km50.rainProb>=pt.km100.rainProb?pt.km50:pt.km100;
+      const distR=(data===pt.km50?0.50:1.00)*maxR;
+      const angle=(pt.deg-90)*Math.PI/180;
+      const px=cx+Math.cos(angle)*distR;
+      const py=cy+Math.sin(angle)*distR;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);
+      const col=data.rainProb>=60?'rgba(255,80,20,0.6)':'rgba(255,200,0,0.5)';
+      ctx.strokeStyle=col;ctx.setLineDash([7,4]);ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
+      // Arrowhead
+      const aang=Math.atan2(py-cy,px-cx);
+      ctx.beginPath();ctx.moveTo(px,py);
+      ctx.lineTo(px-9*Math.cos(aang-0.4),py-9*Math.sin(aang-0.4));
+      ctx.lineTo(px-9*Math.cos(aang+0.4),py-9*Math.sin(aang+0.4));
+      ctx.closePath();ctx.fillStyle=col.replace('0.6','0.8').replace('0.5','0.7');ctx.fill();
+    }
+  });
+
+  // Center dot
+  ctx.beginPath();ctx.arc(cx,cy,18,0,Math.PI*2);ctx.strokeStyle='rgba(79,195,247,0.6)';ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,9,0,Math.PI*2);ctx.fillStyle='#4fc3f7';ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();
+  ctx.fillStyle='rgba(200,235,255,0.9)';ctx.font='bold 12px Poppins';ctx.textAlign='left';
+  ctx.fillText(currentCity,cx+22,cy-8);
+  ctx.fillStyle='rgba(150,200,255,0.5)';ctx.font='9px Poppins';
+  ctx.fillText('11.5641°N 104.9161°E',cx+22,cy+6);
+}
+
+function drawCloudBlob(ctx,deg,distFrac,data,cx,cy,maxR,size){
+  const {type,color,dot}=classifyCloud(data);
+  const angle=(deg-90)*Math.PI/180;
+  const r=distFrac*maxR;
+  const px=cx+Math.cos(angle)*r;
+  const py=cy+Math.sin(angle)*r;
+  // Glow
+  const grd=ctx.createRadialGradient(px,py,1,px,py,size+6);
+  const col=dot;
+  grd.addColorStop(0,col.replace(')',',0.35)').replace('rgb','rgba').replace('#','rgba(').replace(/([0-9a-f]{2})/gi,(_,h)=>parseInt(h,16)+',').slice(0,-1)+')');
+  grd.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath();ctx.arc(px,py,size+6,0,Math.PI*2);ctx.fillStyle=grd;ctx.fill();
+  // Cloud shape (3 circles)
+  ctx.save();ctx.translate(px,py);
+  [[0,0,size*0.7],[size*0.5,-size*0.3,size*0.5],[-size*0.5,-size*0.3,size*0.45]].forEach(([ox,oy,r])=>{
+    ctx.beginPath();ctx.arc(ox,oy,r,0,Math.PI*2);
+    // Fill color based on rain type
+    let fillCol='rgba(80,80,80,0.5)';
+    if(data.rainProb>=60)fillCol='rgba(100,40,20,0.75)';
+    else if(data.rainProb>=40)fillCol='rgba(100,80,0,0.65)';
+    else if(data.rainProb>=20)fillCol='rgba(50,80,130,0.55)';
+    else if(data.cloud>=40)fillCol='rgba(180,190,220,0.3)';
+    else fillCol='rgba(200,230,255,0.15)';
+    ctx.fillStyle=fillCol;ctx.fill();
+    ctx.strokeStyle=dot;ctx.lineWidth=1.2;ctx.stroke();
+  });
+  // Rain drops if raining
+  if(data.rainProb>=40){
+    for(let i=0;i<3;i++){
+      const dx=-8+i*8,dy=size*0.5+i*4;
+      ctx.beginPath();ctx.moveTo(dx,dy);ctx.lineTo(dx-2,dy+6);
+      ctx.strokeStyle='rgba(79,195,247,0.7)';ctx.lineWidth=1.5;ctx.stroke();
+    }
+  }
+  // Thunder if storm
+  if(data.wcode>=80&&data.wcode<=99){
+    ctx.beginPath();ctx.moveTo(2,size*0.4);ctx.lineTo(-2,size*0.7);ctx.lineTo(1,size*0.7);ctx.lineTo(-3,size);
+    ctx.strokeStyle='#FFD700';ctx.lineWidth=2;ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ─── RENDER SYSTEMS LIST ───
+function renderSystemsList(){
+  let html='';
+  let nearest=null,nearestDist=999,danger=null,dangerProb=0;
+  compassData.forEach(pt=>{
+    const d50=pt.km50,d100=pt.km100;
+    const maxProb=Math.max(d50.rainProb,d100.rainProb);
+    const bestData=d50.rainProb>=d100.rainProb?d50:d100;
+    const distKm=d50.rainProb>=d100.rainProb?50:100;
+    const {type,color,risk,dot}=classifyCloud(bestData);
+    if(maxProb<=5&&bestData.cloud<30)return; // skip totally clear
+    let cls='clear';
+    if(maxProb>=60)cls='heavy';
+    else if(maxProb>=30)cls='moderate';
+    else if(maxProb>=10)cls='light';
+    const[,desc]=wmoIcon(bestData.wcode);
+    html+=`<div class="sys-item ${cls}">
+      <span class="sys-dot" style="background:${dot};box-shadow:0 0 6px ${dot};"></span>
+      <div style="flex:1;">
+        <div style="font-weight:600;">${pt.dir} — ${distKm} km &nbsp; <span style="font-size:11px;opacity:.7;">${type}</span></div>
+        <div style="font-size:11px;opacity:.65;">${desc} &bull; Rain: ${maxProb}% &bull; Cloud: ${bestData.cloud}% &bull; Risk: <span style="color:${dot}">${risk}</span></div>
+      </div>
+    </div>`;
+    if(maxProb>=30&&distKm<nearestDist){nearest=pt;nearestDist=distKm;}
+    if(maxProb>dangerProb){danger=pt;dangerProb=maxProb;}
+  });
+  document.getElementById('compass-systems').innerHTML=html||'<div style="padding:16px;opacity:.6;text-align:center;">No significant rain clouds detected within 100km ☀️</div>';
+  // Summary stats
+  if(nearest){document.getElementById('cs-nearest').textContent=nearest.dir+' ~'+nearestDist+'km';}
+  if(danger){
+    document.getElementById('cs-danger').textContent=danger.dir+' — '+dangerProb+'% rain';
+    // ETA estimate: wind at ~20 km/h
+    const windSpd=weatherData?.current?.wind_speed_10m||20;
+    const nearDist=nearest?nearestDist:100;
+    const etaH=(nearDist/Math.max(windSpd,5)).toFixed(1);
+    document.getElementById('cs-eta').textContent='~'+etaH+' hrs (wind '+Math.round(windSpd)+' km/h)';
+  }
+  // Overall risk
+  const maxAll=compassData.reduce((m,p)=>Math.max(m,p.km50.rainProb,p.km100.rainProb),0);
+  const riskEl=document.getElementById('cs-risk');
+  if(maxAll>=60){riskEl.textContent='🔴 HIGH RISK';riskEl.style.color='#ff4020';}
+  else if(maxAll>=30){riskEl.textContent='🟡 MODERATE';riskEl.style.color='#FFD700';}
+  else if(maxAll>=10){riskEl.textContent='🔵 LOW RISK';riskEl.style.color='#4fc3f7';}
+  else{riskEl.textContent='🟢 ALL CLEAR';riskEl.style.color='#00ff88';}
 }
 
 // ─── UPDATE UI ───
@@ -464,11 +651,8 @@ function updateUI(d){
   const nowISO=new Date().toISOString().slice(0,13);
   let hi=h.time.findIndex(t=>t.startsWith(nowISO));if(hi<0)hi=0;
   const rainProb=h.precipitation_probability[hi]||0;
-  const cloudCover=c.cloud_cover||0;
-  const humidity=c.relative_humidity_2m||0;
-  const wcode=c.weather_code||0;
+  const cloudCover=c.cloud_cover||0,humidity=c.relative_humidity_2m||0,wcode=c.weather_code||0;
   const[icon,desc]=wmoIcon(wcode);
-  // AI score
   let score=0;
   if(rainProb>=60)score+=30;else if(rainProb>=30)score+=15;
   if(cloudCover>=70)score+=20;else if(cloudCover>=40)score+=10;
@@ -478,13 +662,12 @@ function updateUI(d){
   score=Math.min(score,99);
   const isRain=score>=45||rainProb>=50;
   const confidence=Math.min(99,score+Math.round(rainProb*0.3));
-  // Dashboard cards
   document.getElementById('rain-prob').textContent=rainProb+'%';
   const rb=document.getElementById('rain-badge');
   if(rainProb>=60){rb.className='badge rain';rb.textContent='🌧 RAIN LIKELY';}
   else if(rainProb>=30){rb.className='badge watch';rb.textContent='⚠ WATCH';}
   else{rb.className='badge norain';rb.textContent='☀ NO RAIN';}
-  document.getElementById('rain-sub').textContent='Cloud: '+cloudCover+'%';
+  document.getElementById('rain-sub').textContent='Cloud: '+cloudCover+'% | Score: '+score+'/99';
   document.getElementById('temp').textContent=(c.temperature_2m||'--')+'°C';
   document.getElementById('feels-like').textContent='Feels like '+(c.apparent_temperature||'--')+'°C';
   document.getElementById('humidity').textContent=humidity+'%';
@@ -500,16 +683,13 @@ function updateUI(d){
   document.getElementById('sunrise').textContent=fmtTime(daily.sunrise[0]);
   document.getElementById('sunset').textContent=fmtTime(daily.sunset[0]);
   document.getElementById('rain-today').textContent=(daily.precipitation_sum[0]||0)+' mm';
-  // 7hr forecast
   let fcHtml='';
   for(let i=hi;i<Math.min(hi+7,h.time.length);i++){
-    const pp=h.precipitation_probability[i]||0;
-    const[ic]=wmoIcon(h.weather_code[i]||0);
+    const pp=h.precipitation_probability[i]||0;const[ic]=wmoIcon(h.weather_code[i]||0);
     const col=pp>=60?'#00ff88':pp>=30?'#FFD700':'#4fc3f7';
     fcHtml+=`<div class="forecast-row"><span class="hour">${fmtTime(h.time[i])}</span><span style="font-size:18px;">${ic}</span><div class="fc-bar"><div class="fc-fill" style="width:${pp}%;background:${col};"></div></div><span class="fc-pct" style="color:${col};">${pp}%</span></div>`;
   }
   document.getElementById('forecast-list').innerHTML=fcHtml;
-  // Rain page
   document.getElementById('rain-rate').textContent=(c.rain||0)+' mm';
   document.getElementById('precip-1h').textContent=(c.precipitation||0)+' mm';
   let sum24=0;for(let i=hi;i<Math.min(hi+24,h.time.length);i++)sum24+=(h.precipitation[i]||0);
@@ -521,10 +701,9 @@ function updateUI(d){
   }
   document.getElementById('rain-24h-list').innerHTML=rl;
   document.getElementById('rain-analysis-box').textContent=
-    rainProb>=70?`🌧 HIGH RAIN (${rainProb}%). Cloud ${cloudCover}%. Humidity ${humidity}%. Take shelter.`:
-    rainProb>=40?`⚠️ MODERATE CHANCE (${rainProb}%). Cloud ${cloudCover}%. Carry umbrella.`:
+    rainProb>=70?`🌧 HIGH RAIN (${rainProb}%). Cloud ${cloudCover}%. Humidity ${humidity}%. Take shelter now!`:
+    rainProb>=40?`⚠️ MODERATE RAIN (${rainProb}%). Cloud ${cloudCover}%. Carry umbrella.`:
     `☀️ LOW RAIN (${rainProb}%). Cloud ${cloudCover}%. Conditions clear.`;
-  // Clouds
   document.getElementById('cloud-low').textContent=(h.cloud_cover_low[hi]||0)+'%';
   document.getElementById('cloud-mid').textContent=(h.cloud_cover_mid[hi]||0)+'%';
   document.getElementById('cloud-high').textContent=(h.cloud_cover_high[hi]||0)+'%';
@@ -535,14 +714,12 @@ function updateUI(d){
     cl+=`<div class="forecast-row"><span class="hour">${fmtTime(h.time[i])}</span><div class="fc-bar"><div class="fc-fill" style="width:${cc}%;background:${col};"></div></div><span class="fc-pct" style="color:${col};">${cc}%</span></div>`;
   }
   document.getElementById('cloud-24h-list').innerHTML=cl;
-  // AI
   document.getElementById('ai-signal').textContent=isRain?'RAIN':'NO RAIN';
   document.getElementById('ai-signal').className='big '+(isRain?'green':'red');
   const ab=document.getElementById('ai-badge');ab.className='badge '+(isRain?'rain':'norain');
   ab.textContent=isRain?'🌧 RAIN SIGNAL':'☀️ CLEAR SIGNAL';
   document.getElementById('ai-confidence').textContent=confidence+'%';
-  document.getElementById('ai-analysis').textContent=`📊 AI Analysis Report\n\n• Rain Probability: ${rainProb}%\n• Cloud Cover: ${cloudCover}%\n• Humidity: ${humidity}%\n• Condition: ${desc}\n• Dew Point: ${c.dew_point_2m}°C\n• AI Score: ${score}/99\n\n📌 Signal: ${isRain?'🌧 RAIN EXPECTED':'☀️ NO RAIN'}\n📌 Confidence: ${confidence}%\n\n${score>=60?'⚠️ Strong rain indicators. Recommend caution.':score>=30?'⚡ Moderate signals. Stay alert.':'✅ Clear conditions expected.'}`;
-  // 7-day
+  document.getElementById('ai-analysis').textContent=`📊 AI Analysis\n\n• Rain Probability: ${rainProb}%\n• Cloud Cover: ${cloudCover}%\n• Humidity: ${humidity}%\n• Condition: ${desc}\n• Dew Point: ${c.dew_point_2m||'--'}°C\n• AI Score: ${score}/99\n\n📌 Signal: ${isRain?'🌧 RAIN EXPECTED':'☀️ NO RAIN'}\n📌 Confidence: ${confidence}%\n\n${score>=60?'⚠️ Strong rain indicators!':score>=30?'⚡ Moderate signals. Stay alert.':'✅ Clear conditions expected.'}`;
   let dh='';const dns=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   for(let i=0;i<Math.min(7,daily.time.length);i++){
     const dt=new Date(daily.time[i]);const pp=daily.precipitation_probability_max[i]||0;
@@ -550,155 +727,21 @@ function updateUI(d){
     dh+=`<div class="cloud-item"><span class="cloud-label">${dns[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}</span><span style="font-size:18px;">${ic2}</span><span style="font-size:11px;color:gold;">${daily.temperature_2m_min[i]}°/${daily.temperature_2m_max[i]}°C</span><span style="font-size:12px;color:${col};">${pp}%🌧</span></div>`;
   }
   document.getElementById('daily-forecast').innerHTML=dh;
-  // Alert bar
   const ab2=document.getElementById('alert-box');
-  if(rainProb>=70||wcode>=61){
-    ab2.style.display='flex';ab2.className='alert-box';
-    document.getElementById('alert-icon').textContent='🌧';
-    document.getElementById('alert-text').innerHTML=`<strong>RAIN ALERT</strong> — ${rainProb}% rain chance. ${desc}. Cloud: ${cloudCover}%. Humidity: ${humidity}%.`;
-  }else if(rainProb>=40){
-    ab2.style.display='flex';ab2.className='alert-box warning';
-    document.getElementById('alert-icon').textContent='⚠️';
-    document.getElementById('alert-text').innerHTML=`<strong>RAIN WATCH</strong> — ${rainProb}% chance. Stay prepared.`;
-  }else{ab2.style.display='none';}
-  // Compass sidebar info
-  document.getElementById('cs-city').textContent=currentCity;
-  document.getElementById('cs-wind').textContent=windDir(c.wind_direction_10m||0)+' '+Math.round(c.wind_direction_10m||0)+'°';
-  document.getElementById('cs-cloud').textContent=cloudCover+'%';
-  document.getElementById('cs-rain').textContent=rainProb+'%';
-  // Draw compass if on that page
-  if(document.getElementById('page-compass').classList.contains('active'))drawCompass();
+  if(rainProb>=70||wcode>=61){ab2.style.display='flex';ab2.className='alert-box';document.getElementById('alert-icon').textContent='🌧';document.getElementById('alert-text').innerHTML=`<strong>RAIN ALERT</strong> — ${rainProb}% rain chance. ${desc}. Cloud: ${cloudCover}%.`;}
+  else if(rainProb>=40){ab2.style.display='flex';ab2.className='alert-box warning';document.getElementById('alert-icon').textContent='⚠️';document.getElementById('alert-text').innerHTML=`<strong>RAIN WATCH</strong> — ${rainProb}% chance. Stay prepared.`;}
+  else{ab2.style.display='none';}
   updateTgPreview();
 }
 
-// ─── STORM COMPASS ───
-function drawCompass(){
-  const canvas=document.getElementById('compass-canvas');
-  if(!canvas||!weatherData)return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height;
-  const cx=W/2,cy=H/2+5;
-  const maxR=Math.min(W,H)/2-36;
-  ctx.clearRect(0,0,W,H);
-  // Dark bg
-  ctx.fillStyle='#08111f';ctx.fillRect(0,0,W,H);
-  // Subtle outer glow
-  const grd=ctx.createRadialGradient(cx,cy,maxR*0.3,cx,cy,maxR*1.1);
-  grd.addColorStop(0,'rgba(30,80,180,0.08)');grd.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
-  // Rings: 40, 70, 100 km
-  const rings=[{pct:0.40,km:'40km'},{pct:0.70,km:'70km'},{pct:1.00,km:'100km'}];
-  rings.forEach((ring,idx)=>{
-    const r=ring.pct*maxR;
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.strokeStyle=`rgba(79,150,255,${0.35-idx*0.08})`;ctx.setLineDash([5,6]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
-    // km label right side
-    ctx.fillStyle='rgba(120,170,255,0.55)';ctx.font='11px Poppins';ctx.textAlign='left';
-    ctx.fillText(ring.km,cx+r+6,cy+4);
-  });
-  // Cross axis lines
-  ctx.strokeStyle='rgba(79,150,255,0.2)';ctx.lineWidth=1;ctx.setLineDash([4,5]);
-  ctx.beginPath();ctx.moveTo(cx,cy-maxR-8);ctx.lineTo(cx,cy+maxR+8);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx-maxR-8,cy);ctx.lineTo(cx+maxR+8,cy);ctx.stroke();
-  ctx.setLineDash([]);
-  // N S E W
-  const dirs8=[
-    {lbl:'N',x:cx,y:cy-maxR-18},{lbl:'S',x:cx,y:cy+maxR+22},
-    {lbl:'E',x:cx+maxR+22,y:cy+5},{lbl:'W',x:cx-maxR-18,y:cy+5},
-    {lbl:'NE',x:cx+(maxR+14)*0.707,y:cy-(maxR+14)*0.707},
-    {lbl:'NW',x:cx-(maxR+14)*0.707,y:cy-(maxR+14)*0.707},
-    {lbl:'SE',x:cx+(maxR+14)*0.707,y:cy+(maxR+14)*0.707},
-    {lbl:'SW',x:cx-(maxR+14)*0.707,y:cy+(maxR+14)*0.707},
-  ];
-  dirs8.forEach(d=>{
-    const isMain=['N','S','E','W'].includes(d.lbl);
-    ctx.font=(isMain?'bold 13px':'11px')+' Poppins';
-    ctx.fillStyle=isMain?'rgba(150,200,255,0.85)':'rgba(100,150,210,0.55)';
-    ctx.textAlign='center';ctx.fillText(d.lbl,d.x,d.y);
-  });
-  // Center city dot
-  ctx.beginPath();ctx.arc(cx,cy,16,0,Math.PI*2);
-  ctx.strokeStyle='rgba(79,195,247,0.7)';ctx.lineWidth=2;ctx.stroke();
-  ctx.beginPath();ctx.arc(cx,cy,8,0,Math.PI*2);ctx.fillStyle='#4fc3f7';ctx.fill();
-  ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
-  ctx.fillStyle='rgba(200,230,255,0.9)';ctx.font='bold 12px Poppins';ctx.textAlign='left';
-  ctx.fillText(currentCity,cx+20,cy-6);
-  // Build systems from live data
-  const c=weatherData.current;
-  const windDeg=c.wind_direction_10m||180;
-  const cloudCover=c.cloud_cover||50;
-  const h=weatherData.hourly;
-  const nowISO=new Date().toISOString().slice(0,13);
-  let hi=h.time.findIndex(t=>t.startsWith(nowISO));if(hi<0)hi=0;
-  const rainProb=h.precipitation_probability[hi]||0;
-  // Clouds come FROM the opposite of wind direction
-  const fromDeg=(windDeg+180)%360;
-  const systems=[
-    {deg:fromDeg, distKm:35+cloudCover*0.35, label:'Main Cloud', prob:rainProb, size:34},
-    {deg:(fromDeg+85)%360, distKm:62+Math.random()*15, label:'Secondary', prob:Math.max(5,rainProb-25), size:22},
-    {deg:(fromDeg+200)%360, distKm:80+Math.random()*18, label:'Far Cloud', prob:Math.max(5,rainProb-45), size:18},
-  ];
-  if(cloudCover>65)systems.push({deg:(fromDeg+310)%360, distKm:90+Math.random()*10, label:'N.System', prob:Math.max(5,rainProb-35), size:16});
-  let sysHtml='';
-  systems.forEach((sys,idx)=>{
-    const angle=(sys.deg-90)*Math.PI/180;
-    const r=(sys.distKm/100)*maxR;
-    const px=cx+Math.cos(angle)*r;
-    const py=cy+Math.sin(angle)*r;
-    const isHeavy=sys.prob>=50;
-    const ellipseW=sys.size;const ellipseH=sys.size*0.55;
-    // Dashed arrow from center to system
-    if(idx===0){
-      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);
-      ctx.strokeStyle=isHeavy?'rgba(255,140,50,0.75)':'rgba(100,160,255,0.6)';
-      ctx.setLineDash([8,5]);ctx.lineWidth=2;ctx.stroke();ctx.setLineDash([]);
-      // Arrowhead
-      const aang=Math.atan2(py-cy,px-cx);
-      ctx.beginPath();
-      ctx.moveTo(px,py);
-      ctx.lineTo(px-10*Math.cos(aang-0.4),py-10*Math.sin(aang-0.4));
-      ctx.lineTo(px-10*Math.cos(aang+0.4),py-10*Math.sin(aang+0.4));
-      ctx.closePath();ctx.fillStyle=isHeavy?'rgba(255,140,50,0.8)':'rgba(100,160,255,0.7)';ctx.fill();
-    }
-    // Cloud ellipse blob
-    ctx.save();ctx.translate(px,py);ctx.rotate(angle+Math.PI/2);
-    ctx.beginPath();ctx.ellipse(0,0,ellipseW,ellipseH,0,0,Math.PI*2);
-    if(isHeavy){
-      const grad=ctx.createRadialGradient(0,0,2,0,0,ellipseW);
-      grad.addColorStop(0,'rgba(255,140,50,0.4)');grad.addColorStop(1,'rgba(255,140,50,0.05)');
-      ctx.fillStyle=grad;
-    }else{
-      const grad=ctx.createRadialGradient(0,0,2,0,0,ellipseW);
-      grad.addColorStop(0,'rgba(79,150,255,0.3)');grad.addColorStop(1,'rgba(79,150,255,0.03)');
-      ctx.fillStyle=grad;
-    }
-    ctx.fill();
-    ctx.strokeStyle=isHeavy?'rgba(255,160,60,0.7)':'rgba(100,160,255,0.55)';
-    ctx.lineWidth=1.5;ctx.stroke();
-    ctx.restore();
-    // Label
-    const dlbl=windDir(sys.deg);
-    const labelX=px+Math.cos(angle)*( ellipseW+16);
-    const labelY=py+Math.sin(angle)*(ellipseH+10)-10;
-    ctx.font='bold 12px Poppins';ctx.textAlign='center';
-    ctx.fillStyle=isHeavy?'rgba(255,180,80,0.95)':'rgba(130,190,255,0.85)';
-    ctx.fillText(dlbl+' · '+Math.round(sys.distKm)+'km',px,py-(ellipseH+14));
-    sysHtml+=`&#x2022; <strong style="color:${isHeavy?'#ffb040':'#6ab4ff'}">${dlbl}</strong> ${Math.round(sys.distKm)} km &mdash; ${sys.prob}% rain ${isHeavy?'⚠️':''}<br>`;
-  });
-  document.getElementById('compass-systems').innerHTML=sysHtml;
-  const nearest=systems.slice().sort((a,b)=>a.distKm-b.distKm)[0];
-  document.getElementById('cs-nearest').textContent=windDir(nearest.deg)+' '+Math.round(nearest.distKm)+' km';
-}
-
 // ─── MAP ───
-let circleLayer=null;
 function initMap(){
   if(map)return;
-  map=L.map('radar-map',{zoomControl:true,scrollWheelZoom:true}).setView([currentLat,currentLon],8);
-  baseLayer=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:18}).addTo(map);
+  map=L.map('radar-map',{zoomControl:true,scrollWheelZoom:true}).setView([currentLat,currentLon],9);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:18}).addTo(map);
   loadRainViewer();
-  L.marker([currentLat,currentLon]).addTo(map).bindPopup('<b>📍 '+currentCity+'</b>').openPopup();
-  circleLayer=L.circle([currentLat,currentLon],{color:'rgba(255,215,0,0.45)',fillColor:'rgba(255,215,0,0.03)',fillOpacity:0.3,radius:100000,weight:1.5,dashArray:'8,8'}).addTo(map).bindPopup('100 km monitoring radius');
+  L.marker([HOME_LAT,HOME_LON]).addTo(map).bindPopup('<b>📍 MR TP — Phnom Penh</b><br>11.5641°N 104.9161°E').openPopup();
+  circleLayer=L.circle([HOME_LAT,HOME_LON],{color:'rgba(255,215,0,0.5)',fillColor:'rgba(255,215,0,0.02)',fillOpacity:0.2,radius:100000,weight:1.5,dashArray:'8,8'}).addTo(map).bindPopup('100 km monitoring radius');
 }
 async function loadRainViewer(){
   try{
@@ -713,14 +756,12 @@ async function loadRainViewer(){
   }catch(e){console.warn('RainViewer',e);}
 }
 function setMapLayer(type){
-  ['rain','sat','wind'].forEach(t=>{const b=document.getElementById('map-'+t+'-btn');if(b)b.classList.remove('active');});
+  ['rain','sat'].forEach(t=>{const b=document.getElementById('map-'+t+'-btn');if(b)b.classList.remove('active');});
   const btn=document.getElementById('map-'+type+'-btn');if(btn)btn.classList.add('active');
   if(!map){initMap();return;}
   if(radarLayer){map.removeLayer(radarLayer);radarLayer=null;}
   if(type==='rain')loadRainViewer();
-  else if(type==='satellite'){
-    radarLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'© ESRI'}).addTo(map);
-  }else if(type==='wind')loadRainViewer();
+  else if(type==='satellite')radarLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(map);
 }
 
 // ─── TELEGRAM ───
@@ -733,20 +774,26 @@ function buildTgMessage(){
   const[,desc]=wmoIcon(c.weather_code||0);
   const isRain=rainProb>=50||(c.weather_code>=61&&c.weather_code<=99);
   const now=new Date().toLocaleString('en-GB',{timeZone:'Asia/Phnom_Penh',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  // Compass summary
+  let compassSummary='';
+  if(compassData.length>0){
+    const rainSystems=compassData.filter(p=>Math.max(p.km50.rainProb,p.km100.rainProb)>=30);
+    if(rainSystems.length>0)compassSummary='\n🧭 Rain systems: '+rainSystems.map(p=>p.dir+' '+Math.max(p.km50.rainProb,p.km100.rainProb)+'%').join(', ');
+  }
   return `🌧 Cambodia Rain 8888 — AI Weather Alert
-📍 ${currentCity}, Cambodia
+📍 Phnom Penh (11.5641°N, 104.9161°E)
 🕐 ${now}
 
 ${isRain?'🌧 RAIN EXPECTED':'☀️ NO RAIN'} — ${rainProb}% probability
 
 🌡 Temp: ${c.temperature_2m}°C (feels ${c.apparent_temperature}°C)
 💧 Humidity: ${c.relative_humidity_2m}%
-☁️ Cloud Cover: ${c.cloud_cover}%
+☁️ Cloud: ${c.cloud_cover}%
 🌬 Wind: ${c.wind_speed_10m} km/h ${windDir(c.wind_direction_10m||0)}
 📊 Condition: ${desc}
-🔥 UV Index: ${c.uv_index||0}
+🔆 UV: ${c.uv_index||0}${compassSummary}
 
-${isRain?'⚠️ Please bring umbrella or find shelter!':'✅ Conditions favorable. Enjoy your day!'}
+${isRain?'⚠️ Bring umbrella or find shelter!':'✅ Conditions favorable. Enjoy your day!'}
 
 📡 @cambodiarain8888 | MR TP AI Weather`;
 }
@@ -757,59 +804,50 @@ function tgLog(msg,type='info'){
   el.innerHTML=`<span class="tg-${type}">[${t}] ${msg}</span><br>`+el.innerHTML;
 }
 async function sendTelegramNow(){
-  if(!weatherData){tgLog('⚠ No weather data yet. Wait for data to load.','err');return;}
+  if(!weatherData){tgLog('⚠ No data yet. Please wait.','err');return;}
   const msg=buildTgMessage();
   tgLog('📤 Sending to @cambodiarain8888…','info');
-  // Try multiple chat_id formats for the channel
   const chatIds=['-1003908019472','@cambodiarain8888'];
   let sent=false;
   for(const cid of chatIds){
     try{
-      const r=await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id:cid,text:msg})
-      });
+      const r=await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:cid,text:msg})});
       const j=await r.json();
-      if(j.ok){tgLog('✅ Sent OK to '+cid,'ok');sent=true;break;}
+      if(j.ok){tgLog('✅ Sent to '+cid,'ok');sent=true;break;}
       else tgLog('⚠ '+cid+': '+j.description,'err');
-    }catch(e){tgLog('❌ '+cid+': '+e.message,'err');}
+    }catch(e){tgLog('❌ '+e.message,'err');}
   }
-  if(!sent)tgLog('❌ Failed. Make sure @cambodiarain8888_bot is admin in the channel.','err');
+  if(!sent)tgLog('❌ Failed — make sure @cambodiarain8888_bot is admin in channel','err');
 }
 function saveTgSettings(){
   const mins=parseInt(document.getElementById('tg-interval').value)||60;
   const threshold=parseInt(document.getElementById('tg-threshold').value)||60;
   if(tgTimer)clearInterval(tgTimer);
-  tgTimer=setInterval(async()=>{
+  tgTimer=setInterval(()=>{
     if(!weatherData)return;
-    const h=weatherData.hourly;
-    const nowISO=new Date().toISOString().slice(0,13);
+    const h=weatherData.hourly;const nowISO=new Date().toISOString().slice(0,13);
     let hi=h.time.findIndex(t=>t.startsWith(nowISO));if(hi<0)hi=0;
     const rainProb=h.precipitation_probability[hi]||0;
     if(rainProb>=threshold)sendTelegramNow();
-    else tgLog(`ℹ Rain ${rainProb}% < threshold ${threshold}%. No alert sent.`,'info');
+    else tgLog(`ℹ Rain ${rainProb}% < ${threshold}%. No alert.`,'info');
   },mins*60*1000);
-  tgLog(`✅ Auto-alert every ${mins} min when rain >= ${threshold}%`,'ok');
+  tgLog(`✅ Auto every ${mins}min when rain≥${threshold}%`,'ok');
 }
 function saveSettings(){
   const mins=parseInt(document.getElementById('s-refresh').value)||5;
   if(refreshTimer)clearInterval(refreshTimer);
   refreshTimer=setInterval(fetchWeather,mins*60*1000);
-  alert('✅ Auto-refresh set to every '+mins+' minutes!');
+  alert('✅ Auto-refresh every '+mins+' minutes!');
 }
 
 // ─── INIT ───
 fetchWeather();
 refreshTimer=setInterval(fetchWeather,5*60*1000);
-// Auto Telegram every 1 hour if rain >= 60%
 tgTimer=setInterval(()=>{
   if(!weatherData)return;
-  const h=weatherData.hourly;
-  const nowISO=new Date().toISOString().slice(0,13);
+  const h=weatherData.hourly;const nowISO=new Date().toISOString().slice(0,13);
   let hi=h.time.findIndex(t=>t.startsWith(nowISO));if(hi<0)hi=0;
-  const rainProb=h.precipitation_probability[hi]||0;
-  if(rainProb>=60)sendTelegramNow();
+  if((h.precipitation_probability[hi]||0)>=60)sendTelegramNow();
 },60*60*1000);
 </script>
 </body>
