@@ -1,25 +1,17 @@
-name: Cambodia Rain 8888 - Auto Weather Alert
+name: Cambodia Rain 8888 - Auto Weather Alert Bot
 
 on:
   schedule:
-    # Every hour at :00 (UTC+7 = Cambodia time)
-    - cron: '0 * * * *'
-  workflow_dispatch:  # Allow manual trigger from GitHub
+    - cron: '0 * * * *'  # Every hour, 24/7
+  workflow_dispatch:      # Manual trigger
 
 jobs:
   send-weather-alert:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install requests pytz
-
-      - name: Run Rain Bot
-        run: python rain_bot.py
+      - run: pip install requests pytz
+      - run: python rain_bot.py
